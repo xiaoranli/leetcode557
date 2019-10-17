@@ -3,75 +3,121 @@
 --  
 思路：
 --
-    1、末位无进位，则末位加一即可，因为末位无进位，前面也不可能产生进位，比如 45 => 46。2、末位有进位，在中间位置进位停止，则需要找到进位的典型标志，即为当前位 %10 后为 0，则前一位加 1，直到不为 0 为止，比如 499 => 500。3、末位有进位，并且一直进位到最前方导致结果多出一位，对于这种情况，需要在第 2 种情况遍历结束的基础上，进行单独处理，比如 999 => 1000  
+    我们将输入字符串中按照空白字符串分开，然后把所有单词放到一个字符串列表中，然后我们逐一遍历每一个字符串并把反转结果连接起来。最后，我们将删除了额外空白字符的字符串返回。    
 代码： 
 --
 <pre>
 /**
  * @author lihe
- * @date 2019/10/16 14:50
- * @descriptor  66. 加一
+ * @date 2019/10/16 21:46
+ * @descriptor
  */
-public class PlusOne_66 {
-    public static int[] plusOne1(int[] digits) {
-        for (int i = digits.length-1; i>=0; i--) {
-            digits[i]++;
-            digits[i] %= 10;
-            if(digits[i] != 0)
-                return digits;
+public class ReverseWords_557 {
+    public static String reverseWords(String s) {
+        String[] strs = s.split(" ");
+        StringBuilder builder = new StringBuilder();
+        for (String str:strs) {
+            builder.append(new StringBuilder(str).reverse().toString()+" ");
         }
-        int[] digit = new int[digits.length+1];
-        digit[0] = 1;
-        return digit;
+        return builder.toString().trim();
     }
-
     public static void main(String[] args) {
-        int[] arr = {9};
-        int[] ints = plusOne1(arr);
-        System.out.println(Arrays.toString(ints));
+        String s ="Let's take LeetCode contest";
+        String s1 = reverseWords(s);
+        System.out.println(s1);
     }
 }
 </pre>
 
 解法二：
 --  
+思路：
+--
+    自己写一个 split 和 reverse 函数。 split 函数将字符串按照 " " （空格）为分隔符将字符串分开并返回单词列表。 reverse 函数返回每个字符串反转后的字符串。  
 代码： 
 --
 <pre>
 /**
  * @author lihe
- * @date 2019/10/16 14:50
- * @descriptor  66. 加一
+ * @date 2019/10/16 21:46
+ * @descriptor
  */
-public class PlusOne_66 {
-    public static int[] plusOne(int[] digits) {
-        int[] sum = new int[digits.length+1];
-        int i = digits.length;
-        int K = 1;
-        int j = 0;
-        while(--i >= 0 || K > 0) {
-            if(i >= 0)
-                K = digits[i] + K;
-            sum[j++] = K % 10;
-            K = K / 10;
-        }
-        for (int k = 0; k < sum.length/2; k++) {
-            swap(sum,k,sum.length-k-1);
-        }
-        if(sum[0]==0)
-           sum = Arrays.copyOfRange(sum, 1, sum.length);
-        return sum;
+public class ReverseWords_557 {
+    public static String reverseWords(String s) {
+        String[] strs = split(s);
+        StringBuilder builder = new StringBuilder();
+       for(String str:strs)
+            builder.append(reverse(str)+" ");
+        return builder.toString().trim();
     }
-    private static void swap(int[] sum, int k, int i) {
-        int temp = sum[k];
-        sum[k] = sum[i];
-        sum[i] = temp;
+    public static String[] split(String s){
+        StringBuilder builder = new StringBuilder();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) != ' ')
+                builder.append(s.charAt(i));
+            else{
+                list.add(builder.toString());
+                builder = new StringBuilder();
+            }
+        }
+        list.add(builder.toString());
+        return list.toArray(new String[list.size()]);
+    }
+
+    public static String reverse(String s) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            builder.insert(0,s.charAt(i));
+        }
+        return builder.toString();
     }
     public static void main(String[] args) {
-        int[] arr = {9};
-        int[] ints = plusOne1(arr);
-        System.out.println(Arrays.toString(ints));
+        String s ="Let's take LeetCode contest";
+        String s1 = reverseWords2(s);
+        System.out.println(s1);
+    }
+}
+</pre>
+解法三：
+--     
+代码： 
+--
+<pre>
+/**
+ * @author lihe
+ * @date 2019/10/16 21:46
+ * @descriptor
+ */
+public class ReverseWords_557 {
+    public static String reverseWords(String s) {
+        String[] strs = s.split(" ");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < strs.length; i++) {
+            char[] chars = strs[i].toCharArray();
+            String ss = reverse(chars);
+            if(i == strs.length-1)
+                builder.append(ss);
+            else
+                 builder.append(ss+" ");
+        }
+        return builder.toString();
+    }
 
+    private static String reverse(char[] chars) {
+        int l = 0;
+        int r = chars.length-1;
+        while(l < r) {
+            char c = chars[l];
+            chars[l++] = chars[r];
+            chars[r--] = c;
+        }
+        return new String(chars);
+    }
+    public static void main(String[] args) {
+        String s ="Let's take LeetCode contest";
+        String s1 = reverseWords(s);
+        System.out.println(s1);
     }
 }
 </pre>
